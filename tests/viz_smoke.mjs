@@ -46,7 +46,7 @@ try {
   const live = await page.evaluate(() => window.__viz.live);
   if (live.error) console.log("live WebGPU unavailable in this browser:", live.error);
   else {
-    console.log(`live WebGPU: ${live.gridMatch}/${live.total} grids identical to the MLX trace, max |q diff| ${live.qDiff.toFixed(5)}, ${(live.ms / 1000).toFixed(1)}s`);
+    console.log(`live WebGPU: ${live.gridMatch}/${live.total} grids identical to the MLX trace, max |q diff| ${live.qDiff.toFixed(5)}, ${(live.ms / 1000).toFixed(1)}s on ${live.adapter}`);
     if (live.gridMatch < live.total * 0.9) fail("WebGPU disagrees with the MLX trace");
   }
   if (errors.length) fail("page errors: " + errors.join("; "));

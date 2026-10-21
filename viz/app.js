@@ -151,8 +151,8 @@ async function runLive() {
       total++; if (p.grid.every((v, i) => v === ref.grid[i])) gridMatch++;
       qDiff = Math.max(qDiff, Math.abs(p.q - ref.q));
     }));
-    window.__viz.live = { gridMatch, total, qDiff, ms };
-    status.textContent = `WebGPU recomputed ${total} answer updates in ${(ms / 1000).toFixed(1)} s: ${gridMatch}/${total} grids identical to the MLX trace, max |q diff| ${qDiff.toFixed(4)}`;
+    window.__viz.live = { gridMatch, total, qDiff, ms, adapter: live.adapter };
+    status.textContent = `WebGPU recomputed ${total} answer updates in ${(ms / 1000).toFixed(1)} s: ${gridMatch}/${total} grids identical to the MLX trace, max |q diff| ${qDiff.toFixed(4)} (${live.adapter})`;
   } catch (e) {
     window.__viz.live = { error: String(e) };
     status.textContent = "Live mode unavailable here: " + e.message + " (the replay above is still the real trace)";

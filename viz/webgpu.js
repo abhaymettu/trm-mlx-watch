@@ -8,13 +8,26 @@ struct MM { M: u32, N: u32, K: u32, sa0: u32, sa1: u32, sb0: u32, sb1: u32, so0:
 @group(0) @binding(1) var<storage, read> A: array<f32>;
 @group(0) @binding(2) var<storage, read> W: array<f32>;
 @group(0) @binding(3) var<storage, read_write> O: array<f32>;
-@compute @workgroup_size(8, 8)
-fn matmul(@builtin(global_invocation_id) g: vec3<u32>) {
+var<workgroup> tA: array<f32, 256>;
+var<workgroup> tB: array<f32, 256>;
+@compute @workgroup_size(16, 16)
+fn matmul(@builtin(global_invocation_id) g: vec3<u32>, @builtin(local_invocation_id) l: vec3<u32>,
+          @builtin(workgroup_id) wg: vec3<u32>) {
   let i = g.x; let j = g.y;
-  if (i >= mm.M || j >= mm.N) { return; }
+  let bi = wg.x * 16u; let bj = wg.y * 16u;
   var acc = 0.0;
-  for (var k = 0u; k < mm.K; k++) { acc += A[i * mm.sa0 + k * mm.sa1] * W[mm.bOff + j * mm.sb0 + k * mm.sb1]; }
-  O[i * mm.so0 + j * mm.so1] = acc;
+  let tiles = (mm.K + 15u) / 16u;
+  for (var t = 0u; t < tiles; t++) {
+    let k = t * 16u;
+    let ai = bi + l.y; let ak = k + l.x;
+    tA[l.y * 16u + l.x] = select(0.0, A[ai * mm.sa0 + ak * mm.sa1], ai < mm.M && ak < mm.K);
+    let bjj = bj + l.y;
+    tB[l.y * 16u + l.x] = select(0.0, W[mm.bOff + bjj * mm.sb0 + ak * mm.sb1], bjj < mm.N && ak < mm.K);
+    workgroupBarrier();
+    for (var q = 0u; q < 16u; q++) { acc += tA[l.x * 16u + q] * tB[l.y * 16u + q]; }
+    workgroupBarrier();
+  }
+  if (i < mm.M && j < mm.N) { O[i * mm.so0 + j * mm.so1] = acc; }
 }`;
 const WGSL_SWIGLU = /* wgsl */ `
 struct SG { rows: u32, hidden: u32 }
@@ -64,7 +77,10 @@ export class LiveTRM {
       fetch(`${assets}/weights.json`).then((r) => r.json()),
       fetch(`${assets}/weights.bin`).then((r) => r.arrayBuffer()),
     ]);
-    return new LiveTRM(device, manifest, new Float32Array(bin));
+    const live = new LiveTRM(device, manifest, new Float32Array(bin));
+    const i = adapter.info || {};
+    live.adapter = [i.vendor, i.architecture, i.description].filter(Boolean).join(" ") || "unknown adapter";
+    return live;
   }
 
   constructor(device, manifest, w) {
@@ -99,7 +115,7 @@ export class LiveTRM {
   buildNet() {
     const d = this.cfg.d, hc = this.hidC, hd = this.hidD, ops = [];
     const mm = (M, N, K, sa0, sa1, sb0, sb1, so0, so1, name, A, O) =>
-      ops.push(this.op(this.p.mm, [M, N, K, sa0, sa1, sb0, sb1, so0, so1, this.off(name)], [A, this.W, O], [Math.ceil(M / 8), Math.ceil(N / 8)]));
+      ops.push(this.op(this.p.mm, [M, N, K, sa0, sa1, sb0, sb1, so0, so1, this.off(name)], [A, this.W, O], [Math.ceil(M / 16), Math.ceil(N / 16)]));
     const sg = (rows, hid) => ops.push(this.op(this.p.sg, [rows, hid], [this.g, this.u], [Math.ceil(rows * hid / 64)]));
     const nm = (name, X, O) => ops.push(this.op(this.p.nm, [CELLS, d, this.off(name)], [X, this.tt, this.W, O], [2]));
     for (let b = 0; b < this.cfg.layers; b++) {
