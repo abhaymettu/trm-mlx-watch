@@ -114,6 +114,7 @@ def main(argv=None):
     ap.add_argument("--iters", type=int, default=100000)
     ap.add_argument("--minutes", type=float, default=60)
     ap.add_argument("--eval-every", type=int, default=1000)
+    ap.add_argument("--log-every", type=int, default=100)
     ap.add_argument("--ema", type=float, default=0.999)
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--no-compile", action="store_true")
@@ -199,7 +200,7 @@ def main(argv=None):
         it += 1
         elapsed = time.time() - t0
         done = it >= a.iters or elapsed > a.minutes * 60
-        if it % 100 == 0 or done:
+        if it % a.log_every == 0 or done:
             k = max(1, run["k"])
             line = {"iter": it, "minutes": round(elapsed / 60, 2), "lr": opt.learning_rate.item(),
                     "train_ce": round(run["ce"] / k, 4), "train_bce": round(run["bce"] / k, 4),

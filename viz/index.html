@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Watch a tiny recursive model think</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <header>
+    <h1>Watch a <span id="params">tiny</span> model think</h1>
+    <p class="sub">A Tiny Recursive Model, trained from scratch on a MacBook, solving a held-out Sudoku one recursion at a time.</p>
+    <p class="badge" id="badge">loading checkpoint</p>
+  </header>
+
+  <section class="stage">
+    <div class="board" id="board" aria-label="Sudoku grid"></div>
+    <aside class="panel">
+      <div class="phase" id="phase">-</div>
+      <dl class="readout">
+        <div><dt>supervision step</dt><dd id="r-step">-</dd></div>
+        <div><dt>recursion</dt><dd id="r-rec">-</dd></div>
+        <div><dt>latent pass</dt><dd id="r-z">-</dd></div>
+        <div><dt>cells right</dt><dd id="r-right">-</dd></div>
+      </dl>
+      <div class="meter">
+        <div class="meter-label"><span>halt signal q</span><span id="r-q">-</span></div>
+        <div class="meter-track"><div class="meter-zero"></div><div class="meter-fill" id="q-fill"></div></div>
+        <p class="hint">The model stops itself when q crosses 0.</p>
+      </div>
+      <div class="legend">
+        <span><i class="sw given"></i>given</span>
+        <span><i class="sw ok"></i>right</span>
+        <span><i class="sw bad"></i>wrong</span>
+        <span><i class="sw think"></i>latent change</span>
+      </div>
+    </aside>
+  </section>
+
+  <section class="timeline">
+    <div class="steps" id="steps"></div>
+    <div class="controls">
+      <button id="play" type="button">Pause</button>
+      <button id="restart" type="button">Restart</button>
+      <label>puzzle <select id="pick"></select></label>
+      <label>speed <input id="speed" type="range" min="1" max="60" value="18"></label>
+      <button id="live" type="button" title="Recompute this solve in your browser with WebGPU">Run live (WebGPU)</button>
+      <span id="live-status" class="live-status"></span>
+    </div>
+  </section>
+
+  <footer id="foot"></footer>
+</main>
+<script type="module" src="app.js"></script>
+</body>
+</html>
