@@ -67,3 +67,25 @@ def test_train_smoke(tmp_path):
     assert (tmp_path / "model.safetensors").exists()
     lines = (tmp_path / "metrics.jsonl").read_text().splitlines()
     assert any('"eval"' in l for l in lines)
+
+
+def test_export_trace_and_weights(tmp_path):
+    import json
+    import subprocess
+    import sys
+    from trm import train
+    run = tmp_path / "run"
+    train.main(["--out", str(run), "--d", "32", "--n", "2", "--T", "2", "--n-sup", "2", "--batch", "4",
+                "--iters", "4", "--eval-every", "4", "--eval-n", "4", "--train-n", "16", "--warmup", "1"])
+    out = tmp_path / "assets"
+    subprocess.run([sys.executable, "scripts/export.py", "--run", str(run), "--out", str(out), "--traces", "2",
+                    "--pool", "2"], check=True)
+    t = json.loads((out / "traces.json").read_text())
+    tr = t["traces"][0]
+    assert len(tr["steps"]) == 2 and len(tr["steps"][0]["passes"]) == 2
+    p = tr["steps"][0]["passes"][0]
+    assert len(p["think"]) == 2 and len(p["think"][0]) == 81 and len(p["grid"]) == 81
+    assert all(g == v for g, v in zip(p["grid"], tr["puzzle"]) if v)
+    man = json.loads((out / "weights.json").read_text())
+    total = sum(int(__import__("numpy").prod(x["shape"])) for x in man["tensors"])
+    assert (out / "weights.bin").stat().st_size == 4 * total
