@@ -104,7 +104,8 @@ async function main() {
   const inf = data.info, ev = inf.last_eval;
   $("params").textContent = (inf.params / 1e6).toFixed(1) + "M-parameter";
   $("badge").textContent = `Partially trained: ${inf.trained_iters.toLocaleString()} steps, ${Math.round(inf.trained_minutes)} min on an M4 Pro. ` +
-    `Held-out exact solves: ${(ev.exact_at_halt * 100).toFixed(1)}% of ${ev.n}.`;
+    (inf.eval_full ? `Solves ${(inf.eval_full.test_solved_valid_sudoku * 100).toFixed(1)}% of ${inf.eval_full.test_puzzles.toLocaleString()} held-out puzzles.`
+      : `Held-out exact solves: ${(ev.exact_at_halt * 100).toFixed(1)}% of ${ev.n}.`);
   $("foot").innerHTML = `Every frame is a real forward pass of the checkpoint on a test puzzle it never trained on. ` +
     `Per supervision step the model runs ${inf.config.T} recursions; each does <b>${inf.config.n} latent passes</b> (z, the glow shows how much each cell's latent changed) ` +
     `then <b>one answer update</b> (y, the digits). Digit brightness is the model's confidence. ` +

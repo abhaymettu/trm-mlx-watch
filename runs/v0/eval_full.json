@@ -1,0 +1,36 @@
+{
+ "checkpoint": "runs/v0",
+ "test_puzzles": 1000,
+ "test_solved_valid_sudoku": 0.808,
+ "test_matches_stored_solution": 0.808,
+ "valid_but_not_stored": 0,
+ "mean_steps": 6.18,
+ "by_difficulty": {
+  "easier third": {
+   "n": 326,
+   "solved": 0.8067,
+   "guess_range": [
+    44,
+    67
+   ]
+  },
+  "middle third": {
+   "n": 339,
+   "solved": 0.8525,
+   "guess_range": [
+    68,
+    119
+   ]
+  },
+  "hardest third": {
+   "n": 335,
+   "solved": 0.7642,
+   "guess_range": [
+    120,
+    1727
+   ]
+  }
+ },
+ "train_subset_puzzles": 1000,
+ "train_subset_solved": 0.799
+}

@@ -1,0 +1,32 @@
+{
+ "iter": 16208,
+ "minutes": 200.0,
+ "last_eval": {
+  "iter": 16208,
+  "minutes": 200.0,
+  "eval": "held-out test, EMA weights",
+  "n": 500,
+  "exact_at_halt": 0.804,
+  "exact_after_all_steps": 0.81,
+  "exact_by_step": [
+   0.0,
+   0.148,
+   0.478,
+   0.62,
+   0.702,
+   0.732,
+   0.746,
+   0.762,
+   0.776,
+   0.782,
+   0.79,
+   0.794,
+   0.798,
+   0.802,
+   0.806,
+   0.81
+  ],
+  "blank_cell_acc_at_halt": 0.9261,
+  "mean_steps": 6.172
+ }
+}

@@ -1,0 +1,149 @@
+{
+ "config": {
+  "d": 512,
+  "layers": 2,
+  "expansion": 4.0,
+  "n": 6,
+  "T": 3,
+  "n_sup": 16
+ },
+ "tensors": [
+  {
+   "name": "embed.weight",
+   "shape": [
+    10,
+    512
+   ],
+   "offset": 0
+  },
+  {
+   "name": "blocks.0.cell_mlp.gate_up.weight",
+   "shape": [
+    432,
+    81
+   ],
+   "offset": 5120
+  },
+  {
+   "name": "blocks.0.cell_mlp.down.weight",
+   "shape": [
+    81,
+    216
+   ],
+   "offset": 40112
+  },
+  {
+   "name": "blocks.0.chan_mlp.gate_up.weight",
+   "shape": [
+    2736,
+    512
+   ],
+   "offset": 57608
+  },
+  {
+   "name": "blocks.0.chan_mlp.down.weight",
+   "shape": [
+    512,
+    1368
+   ],
+   "offset": 1458440
+  },
+  {
+   "name": "blocks.0.norm1.weight",
+   "shape": [
+    512
+   ],
+   "offset": 2158856
+  },
+  {
+   "name": "blocks.0.norm2.weight",
+   "shape": [
+    512
+   ],
+   "offset": 2159368
+  },
+  {
+   "name": "blocks.1.cell_mlp.gate_up.weight",
+   "shape": [
+    432,
+    81
+   ],
+   "offset": 2159880
+  },
+  {
+   "name": "blocks.1.cell_mlp.down.weight",
+   "shape": [
+    81,
+    216
+   ],
+   "offset": 2194872
+  },
+  {
+   "name": "blocks.1.chan_mlp.gate_up.weight",
+   "shape": [
+    2736,
+    512
+   ],
+   "offset": 2212368
+  },
+  {
+   "name": "blocks.1.chan_mlp.down.weight",
+   "shape": [
+    512,
+    1368
+   ],
+   "offset": 3613200
+  },
+  {
+   "name": "blocks.1.norm1.weight",
+   "shape": [
+    512
+   ],
+   "offset": 4313616
+  },
+  {
+   "name": "blocks.1.norm2.weight",
+   "shape": [
+    512
+   ],
+   "offset": 4314128
+  },
+  {
+   "name": "head.weight",
+   "shape": [
+    9,
+    512
+   ],
+   "offset": 4314640
+  },
+  {
+   "name": "q_head.weight",
+   "shape": [
+    1,
+    512
+   ],
+   "offset": 4319248
+  },
+  {
+   "name": "q_head.bias",
+   "shape": [
+    1
+   ],
+   "offset": 4319760
+  },
+  {
+   "name": "y_init",
+   "shape": [
+    512
+   ],
+   "offset": 4319761
+  },
+  {
+   "name": "z_init",
+   "shape": [
+    512
+   ],
+   "offset": 4320273
+  }
+ ]
+}

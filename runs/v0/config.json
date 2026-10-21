@@ -1,0 +1,36 @@
+{
+ "config": {
+  "d": 512,
+  "layers": 2,
+  "expansion": 4.0,
+  "n": 6,
+  "T": 3,
+  "n_sup": 16
+ },
+ "params": 4320785,
+ "args": {
+  "data": "data/sudoku_hard.npz",
+  "out": "runs/v0",
+  "train_n": 20000,
+  "eval_n": 500,
+  "d": 512,
+  "layers": 2,
+  "n": 6,
+  "T": 3,
+  "n_sup": 16,
+  "batch": 32,
+  "lr": 0.0001,
+  "wd": 1.0,
+  "warmup": 1000,
+  "iters": 40000,
+  "minutes": 200.0,
+  "eval_every": 2000,
+  "log_every": 100,
+  "ema": 0.999,
+  "seed": 0,
+  "no_compile": false,
+  "resume": false
+ },
+ "train_base_puzzles": 20000,
+ "eval_puzzles": 500
+}

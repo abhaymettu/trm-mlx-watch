@@ -99,6 +99,9 @@ def main():
             "trained_minutes": progress["minutes"], "last_eval": progress["last_eval"],
             "pool_scanned": min(a.pool, len(tp)), "pool_solved_at_halt": len(solved_idx),
             "note": "traces are picked from held-out test puzzles: solved ones first, plus one it gets wrong"}
+    full = os.path.join(a.run, "eval_full.json")
+    if os.path.exists(full):
+        info["eval_full"] = json.load(open(full))
     json.dump({"info": info, "traces": pick}, open(os.path.join(a.out, "traces.json"), "w"))
     json.dump({"config": meta["config"], "tensors": manifest}, open(os.path.join(a.out, "weights.json"), "w"), indent=1)
     print(json.dumps({k: info[k] for k in ("params", "trained_iters", "pool_scanned", "pool_solved_at_halt")}))
